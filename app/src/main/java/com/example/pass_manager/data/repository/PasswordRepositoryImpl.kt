@@ -2,6 +2,7 @@ package com.example.pass_manager.data.repository
 
 import com.example.pass_manager.data.local.PasswordDao
 import com.example.pass_manager.data.local.entity.PasswordEntity
+import com.example.pass_manager.data.toData
 import com.example.pass_manager.data.toDomain
 import com.example.pass_manager.domain.PasswordRepository
 import com.example.pass_manager.domain.model.Password
@@ -24,12 +25,12 @@ class PasswordRepositoryImpl @Inject constructor(
             }
         }
     }
-    override suspend fun insertPasswordEntity(passwordEntity: PasswordEntity) {
-        passwordDao.insertPasswordEntity(passwordEntity)
+    override suspend fun insertPasswordEntity(password: Password) {
+        passwordDao.insertPasswordEntity(password.toData())
     }
 
-    override suspend fun deletePasswordEntity(passwordEntity: PasswordEntity) {
-        passwordDao.deletePasswordEntity(passwordEntity)
+    override suspend fun deletePasswordEntity(password: Password) {
+        passwordDao.deletePasswordEntity(password.toData())
     }
 
     override suspend fun deleteAllPasswordEntity() {

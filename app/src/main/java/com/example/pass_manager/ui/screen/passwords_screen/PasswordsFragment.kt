@@ -10,9 +10,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pass_manager.R
 import com.example.pass_manager.databinding.PasswordsFragmentBinding
 import com.example.pass_manager.domain.model.Password
+import com.example.pass_manager.ui.adapter.PasswordsListAdapter
 import com.example.pass_manager.utils.LoadState
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -25,6 +27,14 @@ class PasswordsFragment : Fragment(R.layout.passwords_fragment) {
         get() = _binding!!
 
     private val viewModel : PasswordsViewModel by activityViewModels()
+
+    private val adapter = PasswordsListAdapter(object : PasswordsListAdapter.OnItemClickListener {
+        override fun onUserItemClick(password: Password) {
+            val direction = PasswordsFragmentDirections.actionPasswordsFragmentToEditFragment(password)
+            findNavController().navigate(direction)
+        }
+
+    })
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,9 +66,11 @@ class PasswordsFragment : Fragment(R.layout.passwords_fragment) {
     private fun setUi() {
         binding.apply {
             addButton.setOnClickListener {
-                val direction = PasswordsFragmentDirections.actionPasswordsFragmentToEditFragment()
+                val direction = PasswordsFragmentDirections.actionPasswordsFragmentToEditFragment(null)
                 findNavController().navigate(direction)
             }
+            passwordList.adapter = adapter
+            passwordList.layoutManager = LinearLayoutManager(context)
         }
     }
 
@@ -74,7 +86,9 @@ class PasswordsFragment : Fragment(R.layout.passwords_fragment) {
         binding.apply {
             progress.visibility = View.GONE
             passwordList.visibility = View.VISIBLE
+            textNoneData.visibility = View.GONE
         }
+        adapter.submitList(passwords)
     }
 
     private fun setNoneDataUi() {

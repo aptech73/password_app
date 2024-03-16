@@ -12,9 +12,17 @@
             android:id="@+id/action_passwordsFragment_to_editFragment"
             app:destination="@id/editFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/editFragment"
         android:name="com.example.pass_manager.ui.screen.edit_screen.EditFragment"
-        android:label="Edit" />
+        android:label="Edit" >
+
+        <argument
+            android:name="password"
+            app:argType="com.example.pass_manager.domain.model.Password"
+            app:nullable="true"/>
+
+    </fragment>
 
 </navigation>
