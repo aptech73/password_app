@@ -5,9 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.pass_manager.R
 import com.example.pass_manager.databinding.PasswordsFragmentBinding
+import com.example.pass_manager.domain.model.Password
+import com.example.pass_manager.utils.LoadState
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class PasswordsFragment : Fragment(R.layout.passwords_fragment) {
 
@@ -15,6 +23,8 @@ class PasswordsFragment : Fragment(R.layout.passwords_fragment) {
     private var _binding : PasswordsFragmentBinding? = null
     val binding
         get() = _binding!!
+
+    private val viewModel : PasswordsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,6 +38,19 @@ class PasswordsFragment : Fragment(R.layout.passwords_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         setUi()
+        viewModel.loadPasswordList()
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {state ->
+                    when (state.loadState) {
+                        LoadState.LOADING -> setLoadingUi()
+                        LoadState.SUCCESS -> setSuccessUi(state.passwords)
+                        LoadState.NONEDATA -> setNoneDataUi()
+                    }
+                }
+            }
+        }
     }
 
     private fun setUi() {
@@ -36,6 +59,29 @@ class PasswordsFragment : Fragment(R.layout.passwords_fragment) {
                 val direction = PasswordsFragmentDirections.actionPasswordsFragmentToEditFragment()
                 findNavController().navigate(direction)
             }
+        }
+    }
+
+    private fun setLoadingUi() {
+        binding.apply {
+            passwordList.visibility = View.GONE
+            textNoneData.visibility = View.GONE
+            progress.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setSuccessUi(passwords : List<Password>) {
+        binding.apply {
+            progress.visibility = View.GONE
+            passwordList.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setNoneDataUi() {
+        binding.apply {
+            progress.visibility = View.GONE
+            passwordList.visibility = View.GONE
+            textNoneData.visibility = View.VISIBLE
         }
     }
 

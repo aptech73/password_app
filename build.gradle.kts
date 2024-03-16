@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.kotlinx.serialization) apply false
     alias(libs.plugins.kapt) apply false
     alias(libs.plugins.navigation.safeargs) apply false
+    alias(libs.plugins.kotlin.parcelize) apply false
 }

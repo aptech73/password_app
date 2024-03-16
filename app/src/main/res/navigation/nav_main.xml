@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/passwordsFragment"
         android:name="com.example.pass_manager.ui.screen.passwords_screen.PasswordsFragment"
-        android:label="PasswordsFragment" >
+        android:label="Passwords List" >
         <action
             android:id="@+id/action_passwordsFragment_to_editFragment"
             app:destination="@id/editFragment" />
@@ -15,5 +15,6 @@
     <fragment
         android:id="@+id/editFragment"
         android:name="com.example.pass_manager.ui.screen.edit_screen.EditFragment"
-        android:label="EditFragment" />
+        android:label="Edit" />
+
 </navigation>

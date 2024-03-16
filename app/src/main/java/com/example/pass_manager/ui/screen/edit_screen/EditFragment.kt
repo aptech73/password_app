@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.pass_manager.R
 import com.example.pass_manager.databinding.EditFragmentBinding
 
@@ -24,6 +25,16 @@ class EditFragment : Fragment(R.layout.edit_fragment) {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setUi()
+    }
+
+    private fun setUi() {
+        binding.apply {
+            backButtonCard.setOnClickListener {
+                findNavController().navigateUp()
+            }
+        }
     }
 
     override fun onDestroy() {
