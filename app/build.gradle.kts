@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.kapt)
+    alias(libs.plugins.navigation.safeargs)
 }
 
 android {
