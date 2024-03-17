@@ -15,16 +15,9 @@ import javax.inject.Inject
 class PasswordRepositoryImpl @Inject constructor(
     private val passwordDao: PasswordDao
 ): PasswordRepository {
-    override fun getPasswordEntity(): Flow<List<Password>> {
-        return flow {
-            passwordDao.getPasswordEntity().collect {list ->
-                val newList = list.map {
-                    it.toDomain()
-                }
-                emit(newList)
-            }
-        }
-    }
+    override fun getPasswordEntity(): Flow<List<Password>> =
+        passwordDao.getPasswordEntity().map { it.map { it.toDomain() } }
+    
     override suspend fun insertPasswordEntity(password: Password) {
         passwordDao.insertPasswordEntity(password.toData())
     }
